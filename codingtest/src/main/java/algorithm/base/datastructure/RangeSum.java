@@ -1,6 +1,9 @@
 package algorithm.base.datastructure;
 
 import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 /**
  * 수 N개가 주어졌을때 i번째 수에서 j번째 수까지의 합을 구하는 프로그램 작성
  * 
@@ -22,23 +25,41 @@ public class RangeSum {
     
 
     public static void main(String[] args) {
-        for (String e : args){
-            System.out.println("RangeSumInput-"+e );    
-        }
         System.out.println("RangeSum");
+        RangeSum rangeSum = new RangeSum();
+        rangeSum.calculate( rangeSum.loadInput());
+        
     }
     
-    public String loadInput() {
-
+    public String[] loadInput() {
+        
         BufferedReader bufferedReader = new BufferedReader( 
             new InputStreamReader(System.in));
-        try {
-            return  bufferedReader.readLine();
-        } catch (IOException ie ){
-            return null;
-        }
+            return bufferedReader.lines().toArray(String[]::new);
     }
-    
-    
 
+    public List<String> calculate(String[] args){
+
+        int readRow =0;
+        StringTokenizer stk = new StringTokenizer(args[readRow++]);
+        int suNum = Integer.parseInt(stk.nextToken());
+        Integer.parseInt(stk.nextToken());
+
+        long[] rangeArray = new long[suNum+1];
+
+        stk = new StringTokenizer(args[readRow++]);
+        for ( int i=1 ;i <=suNum;i++ ){
+            int readValue =Integer.parseInt(stk.nextToken());
+            rangeArray[i] = readValue +  rangeArray[i-1];
+        }
+        ArrayList<String> ret = new ArrayList<>();
+        while ( readRow <suNum){
+            stk = new StringTokenizer(args[readRow++]);
+            int start = Integer.parseInt(stk.nextToken());
+            int end   = Integer.parseInt(stk.nextToken());
+            long value =rangeArray[end] -rangeArray[start-1];
+            ret.add(String.valueOf(value));
+        }
+        return ret;        
+    }
 }
